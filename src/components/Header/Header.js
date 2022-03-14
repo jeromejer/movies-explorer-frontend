@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import './Header.css';
 import headerLogo from '../../images/logo.svg'
 
-function Header() {
+function Header({color}) {
     return(
-        <header className="header">
+        <header className={`header ${color}`}>
                 <nav className="header__nav">
                     <img className="header__logo" src={headerLogo} alt="Логотип" /> 
                     <div className="header__link">

@@ -16,8 +16,8 @@ function Student() {
                         путешествую по России. Люблю космос, книги, настольные игры и фильмы про науку. Теперь к моему хобби 
                         добавилась веб-разработка, а после пройденного курса хобби превратилось в работу.</p>
                         <div className="student__social">
-                            <a className="student__telegram" href="https://github.com/jeromejer" target="_blank" rel="noreferrer">Telegram</a>
-                            <a className="student__github" href="https://github.com/jeromejer" target="_blank" rel="noreferrer">Github</a>
+                            <a className="student__telegram student__social_link" href="https://github.com/jeromejer" target="_blank" rel="noreferrer">Telegram</a>
+                            <a className="student__github student__social_link" href="https://github.com/jeromejer" target="_blank" rel="noreferrer">Github</a>
                         </div>
                     </div>
                     <img className="student__img" src={studentImg} alt="Фото"/>

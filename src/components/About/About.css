@@ -93,3 +93,66 @@
     color: #000000;;
     background-color: #F2F2F2;
 }
+
+@media screen and (max-width: 767px) {
+    .about__content {
+        max-width: 668px;
+    }
+
+    .about {
+        padding: 90px 0;
+    }
+
+    .about__text {
+        max-width: 319px;
+    }
+    
+    .about__subtitle {
+        font-size: 12px;
+        line-height: 18px;
+        margin: 22px 0 0;
+    }
+
+    .about__info {
+        margin: 0;
+    }
+
+    .about__week {
+        margin: 93px auto 0;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .about__content {
+        max-width: 284px;
+    }
+
+    .about {
+        padding: 70px 0;
+    }
+
+    .about__column {
+        margin-top: 60px;
+        flex-direction: column;
+        gap: 56px;
+    }
+
+    .about__subtitle {
+        font-size: 11px;
+        line-height: 16px;
+        margin: 16px 0 0;
+    }
+
+    .about__info {
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+    .about__week {
+        margin: 60px auto 0;
+    }
+
+    .about__backend {
+        max-width: 100px;
+    }
+}

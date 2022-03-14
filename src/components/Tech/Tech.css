@@ -64,3 +64,64 @@
     max-width: 90px;
     width: 100%;
 }
+
+@media screen and (max-width: 767px) {
+    .tech__content {
+        max-width: 668px;
+    }
+
+    .tech {
+        padding: 90px 0;
+    }
+
+    .tech__subtitle {
+        margin: 80px auto 0;
+    }
+
+    .tech__desc {
+        margin: 22px auto 0;
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .tech__list {
+        margin: 83px auto 0;
+    }
+
+    .tech__item {
+        max-width: 84px;
+        font-size: 12px;
+        line-height: 15px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .tech__content {
+        max-width: 284px;
+    }
+
+    .tech {
+        padding: 70px 0;
+    }
+
+    .tech__subtitle {
+        margin: 60px auto 0;
+        font-size: 30px;
+        line-height: 36px;
+        text-align: center;
+        letter-spacing: -0.04em;
+    }
+
+    .tech__desc {
+        margin: 24px auto 0;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .tech__list {
+        margin: 50px 53px 0;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+}

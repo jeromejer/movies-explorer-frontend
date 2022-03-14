@@ -1,11 +1,16 @@
 .header {
     margin: 0 auto;
-    max-width: 1140px;
+    padding-bottom: 75px;
     width: 100%;
+}
+
+.header__color_pink {
+    background-color: #F3C1F8;
 }
 
 
 .header__nav {
+    max-width: 1140px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -26,6 +31,7 @@
 .header__register {
     color: #000000;
     text-decoration: none;
+    transition: 0.3s;
 }
 
 .header__auth {
@@ -34,5 +40,36 @@
     background-color: #000000;
     padding: 8px 20px;
     text-decoration: none;
+}
+
+.header__register:hover {
+    opacity: 0.7;
+}
+
+@media screen and (max-width: 767px) {
+    .header {
+        max-width: 708px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .header {
+        max-width: 292px;
+    }
+
+    .header__register {
+        font-size: 10px;
+        line-height: 16px;
+    }
+
+    .header__auth {
+        padding: 5px 12px;
+        font-size: 10px;
+        line-height: 16px;
+    }
+
+    .header__link {
+        gap: 26px;
+    }
 }
 
