@@ -94,7 +94,7 @@
     background-color: #F2F2F2;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 820px) {
     .about__content {
         max-width: 668px;
     }

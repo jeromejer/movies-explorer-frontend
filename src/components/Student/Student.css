@@ -136,7 +136,7 @@
     border-bottom: none;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 820px) {
     .student__content {
         max-width: 668px;
     }

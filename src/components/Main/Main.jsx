@@ -6,10 +6,11 @@ import Student from '../Student/Student';
 import Footer from '../Footer/Footer';
 import Header from "../Header/Header";
 
-function Main() {
+function Main({loggedIn}) {
+
     return (
       <>
-        <Header  color="header__color_pink"/>
+        <Header  color="header__color_pink" loggedIn={loggedIn}/>
         <Promo />
         <About />
         <Tech />

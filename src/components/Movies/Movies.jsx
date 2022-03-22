@@ -4,15 +4,18 @@ import Header from "../Header/Header";
 import Search from "../Search/Search";
 import Cards from "../Cards/Cards";
 
-function Main() {
+
+function Movies({loggedIn}) {
+
+
     return (
       <>
-        <Header />
+        <Header loggedIn={loggedIn}/>
         <Search />
-        <Cards />
+        <Cards cardsList="searchCards" />
         <Footer />
       </>
     );
   }
   
-  export default Main;
+  export default Movies;

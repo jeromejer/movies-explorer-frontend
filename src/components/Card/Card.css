@@ -17,6 +17,7 @@
     line-height: 22px;
     margin: 0;
     padding-left: 0;
+    word-break: break-word;
 }
 
 .card__duration {
@@ -24,6 +25,7 @@
     font-size: 11px;
     line-height: 13px;
     color: #A0A0A0;
+    margin: 13px 0 0;
 }
 
 .card__group{
@@ -42,6 +44,24 @@
     background-color: initial;
     transition: 0.5s;
     cursor: pointer;
+    margin-top: 30px;
+    display: block;
+}
+
+.card__delete {
+    background-image: url('/src/images/deleteIcon.svg');
+    width: 22px;
+    height: 22px;
+    border: none;
+    padding: 0;
+    background-position: center;
+    background-size: 22px;
+    background-repeat: no-repeat;
+    background-color: initial;
+    transition: 0.5s;
+    cursor: pointer;
+    margin-top: 30px;
+    display: block;
 }
 
 .card__like_active {
@@ -51,4 +71,40 @@
 .card__img {
     max-width: 220px;
     margin: 6px;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 320px) {
+    .card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card__group {
+        order: 2;
+        display: flex;
+        justify-content: space-between;
+        margin: 14px 16px 14px 12px;
+    }
+
+    .card__img {
+        margin: 0;
+        width: 100%;
+        max-width: 320px;
+        min-height: 168px;
+    }
+
+    .card__title {
+        font-size: 12px;
+        line-height: 15px;
+        max-width: 250px;
+    }
+
+    .card__like{
+        margin-top: 0;
+    }
+
+    .card__duration {
+        margin: 8px 0 0;
+    }
 }

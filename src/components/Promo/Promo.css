@@ -61,11 +61,10 @@
     background-position: top right;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 820px) {
     .promo__content {
         max-width: 708px;
         flex-direction: column;
-        margin-top: 140px;
     }
 
     .promo__img {
@@ -100,7 +99,6 @@
 
 @media screen and (max-width: 320px) {
     .promo__content {
-        margin-top: 70px;
         max-width: 300px;
     }
 

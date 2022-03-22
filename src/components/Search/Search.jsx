@@ -6,10 +6,10 @@ import Checkbox from "../Checkbox/Checkbox";
 function Search() {
     return(
         <div className="search">
-            <div className="search__elements">
+            <form className="search__elements">
                 <input className="search__input" placeholder="Фильм"/>
                 <button className="search__btn" style={{ backgroundImage: `url(${searchImg})` }}></button>
-            </div>
+            </form>
             <Checkbox />
         </div>
     )

@@ -35,3 +35,32 @@
     align-items: center;
     justify-content: space-between;
 }
+
+@media screen and (max-width: 820px) {
+    .search__elements {
+        max-width: 708px;
+        margin: 0 auto;
+    }
+
+    .search__input {
+        max-width: 654px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+}
+
+@media screen and (max-width: 320px) {
+    .search__elements {
+        max-width: 292px;
+    }
+
+    .search__input {
+        max-width: 230px;
+        padding: 13px;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 18px;
+    }
+    
+}
