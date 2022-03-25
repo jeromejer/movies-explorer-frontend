@@ -122,7 +122,7 @@
     }
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 409px) {
     .about__content {
         max-width: 284px;
     }

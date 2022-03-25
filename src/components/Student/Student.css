@@ -169,7 +169,7 @@
 
     .student__img {
         max-width: 255px;
-        height: 307px;
+        height: max-content;
     }
 
     .student__portfolio {
@@ -182,7 +182,22 @@
     }
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 500px) {
+    .student__name {
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .student__info {
+        width: 50%;
+    }
+
+    .student__img {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 409px) {
     .student__content {
         max-width: 284px;
     }
@@ -204,11 +219,6 @@
     .student__img {
         max-width: 292px;
         height: 352px;
-    }
-
-    .student__name {
-        font-size: 30px;
-        line-height: 36px;
     }
 
     .student__job {
@@ -240,5 +250,14 @@
     .student__item-link {
         font-size: 18px;
         line-height: 28px;
+    }
+
+    .student__info {
+        width: 100%;
+    }
+
+    .student__img {
+        width: 100%;
+        height: 100%;
     }
 }

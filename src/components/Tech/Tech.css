@@ -95,7 +95,7 @@
     }
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 409px) {
     .tech__content {
         max-width: 284px;
     }
