@@ -11,7 +11,8 @@
     max-width: 1046px;
     width: 100%;
     border: none;
-    outline: none;
+    outline-color: #dcdada;
+    outline-width: 0.5px;outline: none;
 }
 
 .search__btn {
