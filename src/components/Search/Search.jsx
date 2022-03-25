@@ -7,7 +7,7 @@ function Search() {
     return(
         <div className="search">
             <form className="search__elements">
-                <input className="search__input" placeholder="Фильм"/>
+                <input className="search__input" placeholder="Фильм" required/>
                 <button className="search__btn" style={{ backgroundImage: `url(${searchImg})` }}></button>
             </form>
             <Checkbox />
