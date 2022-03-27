@@ -6,7 +6,7 @@
 
 .tech__content {
     max-width: 1140px;
-    width: 100%;
+    width: 90%;
     margin: 0 auto;
 }
 
@@ -49,6 +49,7 @@
     gap: 10px;
     padding: 0;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .tech__item {
@@ -62,6 +63,7 @@
     background: #E8E8E8;
     border-radius: 10px;
     max-width: 90px;
+    min-width: 84px;
     width: 100%;
 }
 
@@ -102,6 +104,7 @@
 
     .tech {
         padding: 70px 0;
+        background-color: initial;
     }
 
     .tech__subtitle {

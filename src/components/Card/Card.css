@@ -1,6 +1,6 @@
 .card {
     max-width: 1140px;
-    width: 100%;
+    width: 90%;
     margin: 40px auto 0;
     display: flex;
     justify-content: space-between;
@@ -74,10 +74,19 @@
     object-fit: contain;
 }
 
-@media screen and (max-width: 320px) {
+
+@media screen and (max-width: 510px) {
     .card {
         display: flex;
         flex-direction: column;
+        max-width: 400px;
+    }
+
+    .card__img {
+        margin: 0;
+        width: 100%;
+        max-width: 400px;
+        min-height: 168px;
     }
 
     .card__group {
@@ -85,13 +94,6 @@
         display: flex;
         justify-content: space-between;
         margin: 14px 16px 14px 12px;
-    }
-
-    .card__img {
-        margin: 0;
-        width: 100%;
-        max-width: 320px;
-        min-height: 168px;
     }
 
     .card__title {
@@ -107,4 +109,16 @@
     .card__duration {
         margin: 8px 0 0;
     }
+}
+
+
+@media screen and (max-width: 320px) {
+    .card {
+        max-width: 320px;
+    }
+
+    .card__img {
+        max-width: 320px;
+    }
+
 }
