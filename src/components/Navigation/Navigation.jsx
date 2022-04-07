@@ -4,6 +4,12 @@ import './Navigation.css';
 
 function Navigation({loggedIn}) {
 
+    const linkProfile = <Link className="nav__account" to="/profile">Аккаунт</Link>;
+    const linkMovies = <Link className="nav__link" to="/movies">Фильмы</Link>;
+    const linkSaveMovies = <Link className="nav__link" to="/saved-movies">Сохраненные фильмы</Link>;
+    const linkMain = <Link className="nav__link" to="/">Главная</Link>;
+
+
     function handleNavMenuOpen() {
         const navBar = document.querySelector('.nav__menu');
 
@@ -21,10 +27,10 @@ function Navigation({loggedIn}) {
                     {loggedIn ? (
                         <div className="nav__block">
                             <div className="nav__links">
-                                <Link className="nav__link" to="/movies">Фильмы</Link>
-                                <Link className="nav__link" to="/saved-movies">Сохраненные фильмы</Link>
+                                {linkMovies}
+                                {linkSaveMovies}
                             </div>
-                            <Link className="nav__account" to="/profile">Аккаунт</Link>
+                            {linkProfile}
                         </div>
                     ) : (
                         <div className="nav__auth">
@@ -37,11 +43,11 @@ function Navigation({loggedIn}) {
                         <div className="nav__menu-container">
                             <button className="nav__close" onClick={handleNavMenuClose}></button>
                             <div className="nav__links">
-                                <Link className="nav__link" to="/">Главная</Link>
-                                <Link className="nav__link nav__link_active" to="/movies">Фильмы</Link>
-                                <Link className="nav__link" to="/saved-movies">Сохраненные фильмы</Link>
+                                {linkMain}
+                                {linkMovies}
+                                {linkSaveMovies}
                             </div>
-                            <Link className="nav__account" to="/profile">Аккаунт</Link>
+                            {linkProfile}
                         </div>
                     </div>
                 </nav>

@@ -58,6 +58,7 @@
     border: none;
     background-color: initial;
     padding: 0;
+    cursor: pointer;
 }
 
 .profile__submit {
