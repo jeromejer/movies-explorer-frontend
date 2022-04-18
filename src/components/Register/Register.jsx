@@ -1,49 +1,79 @@
 import React from "react";
 import Auth from '../Auth/Auth';
 import Form from '../Form/Form';
+import ValidationForm from '../../utils/validationForm'
 
 
 
+function Register({onRegister, registerError}) {
+  const validation = ValidationForm();
+  const { values, handleChange, errors, isValid, onFocus, isFocused } = validation;
+  const { name, email, password } = values;
 
-function Register({onRegister}) {
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    onRegister({name, email, password});
+    validation.resetForm();
+  };
 
-    onRegister({ name, password, email })
-
+  const inputClassName = (error)=>{
+    return `form__input ${error ? 'form__input_active' : ''}`;
   }
 
-  function handleChangeName(evt) {
-    setName(evt.target.value);
-  }
-
-
-  function handleChangePassword(evt) {
-    setPassword(evt.target.value);
-  }
-
-  function handleChangeEmail(evt) {
-    setEmail(evt.target.value);
+  const errorClassName = (error)=>{
+    return `form__error ${error ? 'form__error_active' : ''}`;
   }
 
   return (
     <Auth>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} isValid={isValid} validation={validation} registerError={registerError}>
             <p className="form__input-title">Имя</p>
-            <input type="text" className="form__input" name="name_user" value={name} onChange={handleChangeName}required/>
-            <span className="form__error" id="name_user-error">Что-то пошло не так...</span>
+            <input 
+              type="text" 
+              className={inputClassName(errors.name && !isFocused.name)} 
+              name="name" 
+              value={values.name} 
+              onChange={handleChange}
+              onFocus={onFocus}
+              required/>
+
+            <span 
+              className={errorClassName(errors.name && !isFocused.name)} 
+              id="name">
+              {errors.name}
+            </span>
 
             <p className="form__input-title">E-mail</p>
-            <input type="email" className="form__input" name="email_user" value={email} onChange={handleChangeEmail} required/>
-            <span className="form__error" id="email_user-error">Что-то пошло не так...</span>
+            <input  
+              type="email" 
+              className={inputClassName(errors.email && !isFocused.email)}  
+              name="email" 
+              value={values.email} 
+              onChange={handleChange} 
+              onFocus={onFocus}
+              required/>
+
+            <span 
+              className={errorClassName(errors.email && !isFocused.email)}
+              id="email">
+              {errors.email}
+            </span>
 
             <p className="form__input-title">Пароль</p>
-            <input type="password" className="form__input form__input_active" name="password_user" minLength="8" value={password} onChange={handleChangePassword} required/>
-            <span className="form__error form__error_active" id="password_user-error">Что-то пошло не так...</span>
+            <input 
+              type="password" 
+              className={inputClassName(errors.password && !isFocused.password)}
+              name="password" 
+              minLength="8" 
+              value={values.password} 
+              onChange={handleChange} 
+              onFocus={onFocus}
+              required/>
+            <span 
+              className={errorClassName(errors.password && !isFocused.password)}
+              id="password">
+              {errors.password}
+            </span>
         </Form>    
     </Auth>
   );

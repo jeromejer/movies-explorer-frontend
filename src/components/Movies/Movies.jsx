@@ -5,14 +5,14 @@ import Search from "../Search/Search";
 import Cards from "../Cards/Cards";
 
 
-function Movies({loggedIn}) {
+function Movies({loggedIn, cards}) {
 
 
     return (
       <>
         <Header loggedIn={loggedIn}/>
         <Search />
-        <Cards cardsList="searchCards" />
+        <Cards cardsList="searchCards" cards={cards} />
         <Footer />
       </>
     );

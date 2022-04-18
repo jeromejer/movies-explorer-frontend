@@ -1,22 +1,36 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import './Cards.css';
 import Card from "../Card/Card";
-import { initialSearchCards, initialSavedCards } from "../../constants/const"
+import moviesApi from "../../utils/MoviesApi";
 
-function Cards({ cardsList }) {
+function Cards({ cardsList, cards, loggedIn }) {
 
-    const searchCardsList = initialSearchCards;
-    const savedCardsList = initialSavedCards;
+    const { pathname } = useLocation();
+    const [movies, setMovies] = React.useState(false);
 
+    React.useEffect(() => {
+        if (loggedIn) {
+          moviesApi
+            .getMoviesData()
+            .then((data) => {
+              setMovies(data);
+              console.log(data)
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }, [loggedIn]);
 
     return (
         <section className="cards">
-            {cardsList === "searchCards" ? (
-                searchCardsList.map((card) => {
-                    return <Card title={card.title} img={card.link} cardsList={cardsList} />
+            {pathname === "/movies" ? (
+                movies.map((card) => {
+                    return <Card title={card.nameRU} img={card.image.url} cardsList={cardsList} />
                 })
             ) : (
-                savedCardsList.map((card) => {
+                movies.map((card) => {
                     return <Card title={card.title} img={card.link} cardsList={cardsList} />
                 })
             )}

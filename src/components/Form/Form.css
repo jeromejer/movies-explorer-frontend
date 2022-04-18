@@ -66,6 +66,10 @@
     cursor: pointer;
 }
 
+.form__btn_disabled {
+    opacity: 0.5;
+}
+
 .form__btn:hover {
     opacity: 0.8;
 }

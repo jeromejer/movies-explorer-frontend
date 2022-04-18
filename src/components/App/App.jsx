@@ -9,14 +9,15 @@ import Profile from '../Profile/Profile';
 import NotFound from '../NotFound/NotFound';
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import * as auth from "../../utils/auth";
-import api from "../../utils/api";
+import api from "../../utils/MainApi";
+import moviesApi from "../../utils/MoviesApi";
 
 
 function App() {
 
   const [currentUser, setCurrentUser] = React.useState({});
-
+  const [loginError, setLoginError] = React.useState(false);
+  const [registerError, setRegisterError] = React.useState(false);
 
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [email, setEmail] = React.useState("");
@@ -25,27 +26,28 @@ function App() {
   const nav = useNavigate();
 
   //описание авторизации
-  function onLogin({ password, email }) {
-    return auth
-      .signin({ password, email })
-      .then((data) => {
+  function onLogin(email, password) {
+   return api
+      .signin(email, password)
+      .then(data => {
         if (data.token) {
-          setEmail(email);
+          localStorage.setItem('jwt', data.token);
+          localStorage.setItem('email', email);
           setLoggedIn(true);
-          localStorage.setItem("jwt", data.token);
-          localStorage.setItem("email", email);
-          nav("/movies");
+          setEmail(email);
+          nav("/movies"); 
         }
       })
       .catch((err) => {
+        setLoginError(true);
         console.log(err);
-      });
+      })
   }
 
 
   //описание регистрации
   function onRegister({ name, password, email }) {
-    return auth
+    return api
       .signup({ name, password, email })
       .then((data) => {
         if (data.data.email) {
@@ -53,6 +55,7 @@ function App() {
         }
       })
       .catch((err) => {
+        setRegisterError(true)
         console.log(err);
       });
   }
@@ -60,7 +63,7 @@ function App() {
   //проверка токена
   React.useEffect(() => {
     if (jwt) {
-      auth
+      api
         .checkToken(jwt)
         .then((data) => {
           if (data && data.email) {
@@ -109,50 +112,51 @@ function App() {
     nav("/");
   }
 
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
 
-    <div className="app">
-      <Routes>
-      <Route
+      <div className="app">
+        <Routes>
+          <Route
             exact
             path="/"
             element={
-              <Main loggedIn={loggedIn}/>
+              <Main loggedIn={loggedIn} />
             }
           />
-      <Route
+          <Route
             path="/movies"
             element={
-                <Movies loggedIn={loggedIn}/>
+              <Movies loggedIn={loggedIn} />
             }
           />
-        <Route
+          <Route
             path="/saved-movies"
             element={
-                <SavedMovies loggedIn={loggedIn}/>
+              <SavedMovies loggedIn={loggedIn} />
             }
           />
           <Route
             path="/signup"
             element={
-              <Register onRegister={onRegister}/>
+              <Register onRegister={onRegister} registerError={registerError}/>
             }
           />
           <Route
             path="/signin"
             element={
-              <Login onLogin={onLogin} />
+              <Login onLogin={onLogin} loginError={loginError}/>
             }
           />
           <Route
             path="/profile"
             element={
-                <Profile  
-              loggedIn={loggedIn} 
-              email={email} 
-              onUpdateUser={handleUpdateUser}
-              handleSignOut={handleSignOut}/>
+              <Profile
+                loggedIn={loggedIn}
+                email={email}
+                onUpdateUser={handleUpdateUser}
+                handleSignOut={handleSignOut} />
             }
           />
           <Route
@@ -162,7 +166,7 @@ function App() {
             }
           />
         </Routes>
-    </div>
+      </div>
     </CurrentUserContext.Provider>
   );
 }

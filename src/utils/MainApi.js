@@ -18,6 +18,31 @@ class Api {
         }
     }
     
+    signin({ email, password }) {
+        return fetch(`${this._endpoint}/signin`, {
+            method: 'POST',
+            headers: this.headers(),
+            body: JSON.stringify({ email, password })
+        })
+        .then(this._resStatus);
+    }
+
+    signup({ name, email, password }) {
+        return fetch(`${this._endpoint}/signup`, {
+            method: 'POST',
+            headers: this.headers(),
+            body: JSON.stringify({ name, email, password })
+        })
+        .then(this._resStatus);
+    }
+    
+    checkToken() {
+        return fetch(`${this._endpoint}/users/me`, {
+            method: 'GET',
+            headers: this.headers(),
+        })
+        .then(this._resStatus);
+    }
 
     getUserData() {
         return fetch(`${this._endpoint}/users/me`, {
@@ -47,5 +72,6 @@ const api = new Api({
         'Content-type': 'application/json'
     }
   })
+
 
 export default  api;
