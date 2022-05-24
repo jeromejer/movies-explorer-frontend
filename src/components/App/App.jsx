@@ -1,8 +1,8 @@
 import './App.css';
 import React from "react";
 import Main from '../Main/Main';
-import SavedMovies from '../SavedMovies/SavedMovies';
 import Movies from '../Movies/Movies';
+import SavedMovies from '../SavedMovies/SavedMovies';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
 import Profile from '../Profile/Profile';
@@ -10,7 +10,7 @@ import NotFound from '../NotFound/NotFound';
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import api from "../../utils/MainApi";
-import moviesApi from "../../utils/MoviesApi";
+import { localStorageConst } from "../../constants/const";
 
 
 function App() {
@@ -22,19 +22,19 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [email, setEmail] = React.useState("");
 
-  const jwt = localStorage.getItem("jwt");
+  const jwt = localStorage.getItem(localStorageConst.jwt);
   const nav = useNavigate();
 
+
   //описание авторизации
-  function onLogin(email, password) {
+  function onLogin({email, password}) {
    return api
-      .signin(email, password)
+      .signin({email, password})
       .then(data => {
         if (data.token) {
-          localStorage.setItem('jwt', data.token);
-          localStorage.setItem('email', email);
           setLoggedIn(true);
-          setEmail(email);
+          localStorage.setItem(localStorageConst.jwt, data.token);
+          localStorage.setItem(localStorageConst.email, email);
           nav("/movies"); 
         }
       })
@@ -106,11 +106,14 @@ function App() {
   //выход
   function handleSignOut() {
     setLoggedIn(false);
-    localStorage.removeItem("jwt");
-    localStorage.removeItem("email");
+    Object.keys(localStorageConst).forEach(key => {
+      localStorage.removeItem(key)
+    });
     setEmail("");
     nav("/");
   }
+
+ 
 
 
   return (

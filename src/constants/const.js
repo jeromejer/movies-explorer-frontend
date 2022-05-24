@@ -35,9 +35,9 @@ export const initialSearchCards = [
         title: 'Когда я думаю о Германии ночью',
         link: kogdayadumau,
     }
-  ];
+];
 
- export const initialSavedCards = [
+export const initialSavedCards = [
     {
         title: '33 слова о дизайне',
         link: odizaine,
@@ -50,5 +50,12 @@ export const initialSearchCards = [
         title: 'В погоне за Бенкси',
         link: vpogone,
     }
-  ];
+];
+
+export const localStorageConst = {
+    jwt: 'jwt',
+    email: 'email',
+    movies: 'movies',
+    moviesSearch: 'moviesSearch'
+};
 

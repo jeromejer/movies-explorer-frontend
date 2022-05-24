@@ -1,3 +1,5 @@
+import { localStorageConst } from "../constants/const";
+
 class Api {
     constructor({endpoint, headers}) {
         this._endpoint = endpoint
@@ -14,7 +16,7 @@ class Api {
     headers(){
         return {
             ...this._headers,
-            'authorization': 'Bearer ' + localStorage.getItem('jwt'),
+            'authorization': 'Bearer ' + localStorage.getItem(localStorageConst.jwt),
         }
     }
     
@@ -63,6 +65,43 @@ class Api {
         })
         .then(this._resStatus)
     }
+
+    getSaveMovies() {
+        return fetch(`${this._endpoint}/movies`, {
+            headers: this.headers(), 
+        })
+        .then(this._resStatus)
+    }
+
+    addMovie(movie) {
+        return fetch(`${this._endpoint}/movies`, {
+            method: 'POST',
+            headers: this.headers(), 
+            body: JSON.stringify({
+                country:  movie.country || ' ',
+                director: movie.director,
+                duration: movie.duration,
+                year: movie.year,
+                description: movie.description,
+                trailerLink: movie.trailerLink,
+                movieId: movie.id,
+                nameRU: movie.nameRU,
+                nameEN: movie.nameEN,
+                image: `https://api.nomoreparties.co${movie.image.url}`,
+                thumbnail: `https://api.nomoreparties.co${movie.image.url}`
+            })
+        })
+        .then(this._resStatus)
+    }
+
+    deleteMovie(id) {
+        return fetch(`${this._endpoint}/movies/${id}`, {
+            method: 'DELETE',
+            headers: this.headers(), 
+        })
+        .then(this._resStatus)
+    }
+
 
 }
 

@@ -1,43 +1,68 @@
 import React from "react";
 import './Card.css';
+import { useLocation } from "react-router-dom";
+import api from "../../utils/MainApi";
 
-function Card({cardsList, title, img}) {
+const imagesHost = 'https://api.nomoreparties.co';
 
-    const [isSavedMovie, setIsSavedMovie] = React.useState(false);
-   
+function Card( movie) {
 
-    const likeIcon = (
-    `card__like ${isSavedMovie ? 'card__like_active' : ''}`
-       ); 
+    const {title, image, isActive } = movie;
+
+    const img = typeof image === 'string' ? image : imagesHost + image.url;
+
+    const location = useLocation();
     
-    const deleteIcon = (
-        'card__delete'
-       );   
+    const [isSavedMovie, setIsSavedMovie] = React.useState(isActive || false);
 
-    const cardIcon = cardsList === "searchCards" ? likeIcon : deleteIcon;
+    const renderIcon = (location) => {
+        if (location.pathname === "/saved-movies") {
+            return 'card__delete'
+        } else {
+            return `card__like ${isActive ? 'card__like_active' : ''}`
+        }
+    }
 
+    function likeMovie() {
+        if (!isSavedMovie) { 
+        api
+        .addMovie(movie)
+        .then(() => {
+            setIsSavedMovie(true)
+            }) 
+        } else {
+            return;
+        }
+    }
 
+    function deleteMovie() {
+        api
+        .deleteMovie(movie._id) 
+        }
 
-    function handleLikeMovie() {
-      if (!isSavedMovie) {
-          setIsSavedMovie(true) 
-      } else {
-          setIsSavedMovie(false)
-      }
-    };
-  
+    function handleClickDeleteOrSaveMovie(e) {
+        e.preventDefault();
+
+        if (location.pathname === "/saved-movies") {
+            deleteMovie()
+        }
+        else {
+            likeMovie()
+        }
+    }
+
         
-    return(
+        return(
         <>
             <article className="card">
                 <div className="card__group">
                     <div className="card__description">
                         <h2 className="card__title">{title}</h2>
-                        <p className="card__duration">1ч 42м</p>
+                        <p className="card__duration">{isActive ? 'my' : 'not my'}</p>
                     </div>
-                    <button className={cardIcon} onClick={handleLikeMovie}></button>
+                    <button className={renderIcon(location)} onClick={handleClickDeleteOrSaveMovie}></button>
                 </div>
-                <img className="card__img" alt="Обложка фильма" src={img}/>
+                <img className="card__img" alt="Обложка фильма" src={img} />
             </article>
 
         </>

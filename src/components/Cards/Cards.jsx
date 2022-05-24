@@ -1,44 +1,40 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import './Cards.css';
 import Card from "../Card/Card";
-import moviesApi from "../../utils/MoviesApi";
+import api from "../../utils/MainApi";
 
-function Cards({ cardsList, cards, loggedIn }) {
+function Cards(props) {
 
-    const { pathname } = useLocation();
-    const [movies, setMovies] = React.useState(false);
+    const { movies: moviesList, userMoviesList } = props
 
-    React.useEffect(() => {
-        if (loggedIn) {
-          moviesApi
-            .getMoviesData()
-            .then((data) => {
-              setMovies(data);
-              console.log(data)
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      }, [loggedIn]);
+    console.log(' RENDER Cards')
+    // const [userMoviesList, setUserMoviesList] = React.useState([]);
+
+
+    // React.useEffect(() => {
+    //     api
+    //       .getSaveMovies()
+    //       .then((moviesList) => {
+    //         if (moviesList) {
+    //             setUserMoviesList(moviesList.map((i) => i.movieId));
+    //         }
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       })
+    //   }, []);
 
     return (
         <section className="cards">
-            {pathname === "/movies" ? (
-                movies.map((card) => {
-                    return <Card title={card.nameRU} img={card.image.url} cardsList={cardsList} />
-                })
-            ) : (
-                movies.map((card) => {
-                    return <Card title={card.title} img={card.link} cardsList={cardsList} />
-                })
+            { moviesList && moviesList.map((movie) => {
+                const isActive = userMoviesList && userMoviesList.indexOf(movie.id)>-1;
+                return (<Card {...movie} title={movie.nameRU || movie.nameEN} isActive={isActive}/>)}
             )}
+
+            { moviesList.length ? 
             <div className="cards__btn-block">
-                {cardsList === "searchCards" ? (<>
-                    <button className="cards__btn">Ещё</button>
-                </>) : ('')}
-            </div>
+                <button className="cards__btn">Ещё</button>
+            </div>: ''}
 
         </section>
     )

@@ -28,7 +28,6 @@ function Login({onLogin, loginError}) {
     return `form__error ${error ? 'form__error_active' : ''}`;
   }
 
-  console.log('loginError', loginError)
 
   return (
     <Auth >

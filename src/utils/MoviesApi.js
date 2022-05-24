@@ -13,7 +13,7 @@ class MoviesApi {
 
     getMoviesData() {
         return fetch(`${this._endpoint}`, {
-            headers: this.headers(),
+            headers: this.headers,
         })
         .then(this._resStatus);
     }
@@ -21,7 +21,7 @@ class MoviesApi {
 }
 
 const moviesApi = new MoviesApi({
-    endpoint: 'api.nomoreparties.co/beatfilm-movies',
+    endpoint: 'https://api.nomoreparties.co/beatfilm-movies',
     headers: {
         'Content-type': 'application/json'
     }
