@@ -2,7 +2,6 @@ import './App.css';
 import React from "react";
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
-import SavedMovies from '../SavedMovies/SavedMovies';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
 import Profile from '../Profile/Profile';
@@ -137,7 +136,7 @@ function App() {
           <Route
             path="/saved-movies"
             element={
-              <SavedMovies loggedIn={loggedIn} />
+              <Movies loggedIn={loggedIn} />
             }
           />
           <Route

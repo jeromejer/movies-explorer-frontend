@@ -10,84 +10,147 @@ import api from "../../utils/MainApi";
 import { useLocation } from "react-router-dom";
 
 
-function Movies({loggedIn}) {
+function Movies({ loggedIn }) {
+
+  let initialMovies = [];
+  try {
+    initialMovies = JSON.parse(localStorage.getItem(localStorageConst.movies)) || [];
+  }
+  catch (e) { }
+
+  const initialSearch = localStorage.getItem(localStorageConst.moviesSearch) || '';
+
+  const location = useLocation();
+
+  console.log('render list')
+
+  const [movies, setMovies] = useState(initialMovies);
+  const [userMoviesList, setUserMoviesList] = React.useState([]);
+
+  const [inputValue, setInputValue] = useState(initialSearch);
+  const [isLoader, setIsLoader] = React.useState(false);
 
 
-    let initialMovies = [];
-    try {
-      initialMovies = JSON.parse(localStorage.getItem(localStorageConst.movies)) || [];
+  //получение сохраненных фильмов
+  const getSavedUserMovies = () => {
+    return api
+      .getSaveMovies()
+      .then((moviesList) => {
+        if (moviesList) {
+          setUserMoviesList(moviesList);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  };
+
+  React.useEffect(() => {
+    getSavedUserMovies();
+  }, []);
+
+  React.useEffect(() => {
+    if (location.pathname === "/saved-movies") {
+      setInputValue('')
+    } else {
+      setInputValue(initialSearch)
     }
-    catch(e){}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
-    const initialSearch = localStorage.getItem(localStorageConst.moviesSearch) || '';
+  React.useEffect(() => {
+    setMovies(movies.map(setActiveState));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userMoviesList]);
 
-    const location = useLocation();
-    
-   
+  //получение списка фильмов из поиска бестфильм
+  const getMovies = (search = '') => {
+    setIsLoader(true);
 
-    const [movies, setMovies] = useState(initialMovies);
-    const [inputValue, setInputValue] = useState(initialSearch);
-    const [isLoader, setIsLoader] = React.useState(false);
-    const [userMoviesList, setUserMoviesList] = React.useState([]);
+    moviesApi
+      .getMoviesData()
+      .then((movies) => {
+        const regular = new RegExp(search, 'i');
+        const filtered = movies.filter(movie => {
+          const { nameRU, nameEN } = movie;
+          return regular.test(nameRU) || regular.test(nameEN);
+        });
 
-    React.useEffect(() => {
+        localStorage.setItem(localStorageConst.movies, JSON.stringify(filtered));
+        localStorage.setItem(localStorageConst.moviesSearch, inputValue);
+
+        setMovies(filtered.map(setActiveState));
+        setIsLoader(false);
+
+        console.log(filtered)
+        console.log(movies)
+      })
+  }
+
+  const setActiveState = movieFromList => {
+    const findedMovie = userMoviesList.find(movie => movie.movieId === movieFromList.id);
+    movieFromList.isActive = findedMovie && true;
+    movieFromList._id = findedMovie?._id;
+    return movieFromList;
+  };
+
+  //сохранение фильма
+  function addMovie(movie) {
+    if (movie.isActive) {
+      movie._id && removeMovie(movie)
+    }
+    else {
       api
-        .getSaveMovies()
-        .then((moviesList) => {
-          if (moviesList) {
-              setUserMoviesList(moviesList.map((i) => i.movieId));
-          }
+        .addMovie(movie)
+        .then(() => {
+          getSavedUserMovies();
         })
         .catch((err) => {
           console.log(err);
-        })
-    }, []);
+        });
+    }
+  }
 
-    const getMovies = (search = '') => {
-      setIsLoader(true);
-
-        moviesApi
-      .getMoviesData()
-      .then((movies) => {
-          const regular = new RegExp(search, 'i');
-          const filtered = movies.filter(movie => {
-            const { nameRU, nameEN } = movie;
-            return regular.test(nameRU) || regular.test(nameEN);
-          })
-          // .map(movie => {
-          //   movie.isActive = userMoviesList.indexOf(movie.id)>-1;
-          //   return movie;
-          // }) 
-          
-          localStorage.setItem(localStorageConst.movies, JSON.stringify(filtered));
-          localStorage.setItem(localStorageConst.moviesSearch, inputValue);
-
-          setIsLoader(false);
-          setMovies(filtered);
+  // удаление фильма
+  function removeMovie(movie) {
+    console.log(movie, 'delete')
+    api
+      .deleteMovie(movie._id)
+      .then(() => {
+        getSavedUserMovies();
       })
-    }
-
-    
-
-    const formSubmitHandler = (e) => {
-        e.preventDefault();
-        getMovies(inputValue);
-    }
-
-    const searchInputChangeHandler = (e) => {
-      setInputValue(e.target.value);
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
 
-    return (
-      <>
-        <Header loggedIn={loggedIn}/>
-        <Search  formSubmitHandler={formSubmitHandler} searchInputChangeHandler={searchInputChangeHandler} inputValue={inputValue}/>
-        {isLoader &&  <Preloader />}
-        {!isLoader &&  <Cards movies={movies} userMoviesList={userMoviesList} />}
-        <Footer />
-      </>
-    );
+
+  const formSubmitHandler = (e) => {
+    e.preventDefault();
+    getMovies(inputValue);
   }
-  
-  export default Movies;
+
+  const searchInputChangeHandler = (e) => {
+    setInputValue(e.target.value);
+  }
+
+
+  return (
+    <>
+      <Header loggedIn={loggedIn} />
+      <Search formSubmitHandler={formSubmitHandler} searchInputChangeHandler={searchInputChangeHandler} inputValue={inputValue} />
+      {isLoader && <Preloader />}
+
+      {location.pathname === "/movies" ?
+        <Cards movies={movies} clickHandler={addMovie} />
+        : <Cards movies={userMoviesList} clickHandler={removeMovie} />
+      }
+
+      <Footer />
+    </>
+  );
+}
+
+export default Movies;
+

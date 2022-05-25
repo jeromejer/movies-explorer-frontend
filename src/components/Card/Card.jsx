@@ -1,21 +1,22 @@
 import React from "react";
 import './Card.css';
 import { useLocation } from "react-router-dom";
-import api from "../../utils/MainApi";
 
 const imagesHost = 'https://api.nomoreparties.co';
 
-function Card( movie) {
+function Card({movie, clickHandler}) {
 
-    const {title, image, isActive } = movie;
+    const {
+        title,
+        image,
+        isActive,
+    } = movie;
 
     const img = typeof image === 'string' ? image : imagesHost + image.url;
 
     const location = useLocation();
-    
-    const [isSavedMovie, setIsSavedMovie] = React.useState(isActive || false);
 
-    const renderIcon = (location) => {
+    const renderIcon = () => {
         if (location.pathname === "/saved-movies") {
             return 'card__delete'
         } else {
@@ -23,36 +24,12 @@ function Card( movie) {
         }
     }
 
-    function likeMovie() {
-        if (!isSavedMovie) { 
-        api
-        .addMovie(movie)
-        .then(() => {
-            setIsSavedMovie(true)
-            }) 
-        } else {
-            return;
-        }
-    }
-
-    function deleteMovie() {
-        api
-        .deleteMovie(movie._id) 
-        }
-
-    function handleClickDeleteOrSaveMovie(e) {
+    const onClick = (e) => {
         e.preventDefault();
-
-        if (location.pathname === "/saved-movies") {
-            deleteMovie()
-        }
-        else {
-            likeMovie()
-        }
+        clickHandler(movie);
     }
 
-        
-        return(
+    return (
         <>
             <article className="card">
                 <div className="card__group">
@@ -60,7 +37,7 @@ function Card( movie) {
                         <h2 className="card__title">{title}</h2>
                         <p className="card__duration">{isActive ? 'my' : 'not my'}</p>
                     </div>
-                    <button className={renderIcon(location)} onClick={handleClickDeleteOrSaveMovie}></button>
+                    <button className={renderIcon()} onClick={onClick}></button>
                 </div>
                 <img className="card__img" alt="Обложка фильма" src={img} />
             </article>
