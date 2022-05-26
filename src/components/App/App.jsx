@@ -6,13 +6,16 @@ import Register from '../Register/Register';
 import Login from '../Login/Login';
 import Profile from '../Profile/Profile';
 import NotFound from '../NotFound/NotFound';
+import RequireAuth from '../RequireAuth';
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation, Navigate } from "react-router-dom";
 import api from "../../utils/MainApi";
 import { localStorageConst } from "../../constants/const";
 
 
 function App() {
+
+  const [afterLoginCheck, setAfterLoginCheck] = React.useState(false);
 
   const [currentUser, setCurrentUser] = React.useState({});
   const [loginError, setLoginError] = React.useState(false);
@@ -23,18 +26,19 @@ function App() {
 
   const jwt = localStorage.getItem(localStorageConst.jwt);
   const nav = useNavigate();
+  const location = useLocation();
 
 
   //описание авторизации
-  function onLogin({email, password}) {
-   return api
-      .signin({email, password})
+  function onLogin({ email, password }) {
+    return api
+      .signin({ email, password })
       .then(data => {
         if (data.token) {
           setLoggedIn(true);
           localStorage.setItem(localStorageConst.jwt, data.token);
           localStorage.setItem(localStorageConst.email, email);
-          nav("/movies"); 
+          nav("/movies");
         }
       })
       .catch((err) => {
@@ -72,9 +76,13 @@ function App() {
         })
         .catch((err) => {
           console.log(err);
-        });
+        })
+        .finally(() => {
+          setAfterLoginCheck(true)
+        })
     }
-  }, [jwt]);
+    else { setAfterLoginCheck(true) }
+  }, []);
 
   //получение данных профиля
   React.useEffect(() => {
@@ -86,7 +94,7 @@ function App() {
         })
         .catch((err) => {
           console.log(err);
-        });
+        })
     }
   }, [loggedIn]);
 
@@ -112,7 +120,7 @@ function App() {
     nav("/");
   }
 
- 
+
 
 
   return (
@@ -127,40 +135,47 @@ function App() {
               <Main loggedIn={loggedIn} />
             }
           />
-          <Route
+
+          {afterLoginCheck && <Route
             path="/movies"
-            element={
-              <Movies loggedIn={loggedIn} />
+            element={loggedIn ?
+              <Movies loggedIn={loggedIn} /> : <Navigate to="/signin" />
             }
-          />
-          <Route
+          />}
+
+          {afterLoginCheck && <Route
             path="/saved-movies"
-            element={
-              <Movies loggedIn={loggedIn} />
+            element={loggedIn ?
+              <Movies loggedIn={loggedIn} /> : <Navigate to="/signin" />
             }
           />
+          }
+
           <Route
             path="/signup"
             element={
-              <Register onRegister={onRegister} registerError={registerError}/>
+              <Register onRegister={onRegister} registerError={registerError} />
             }
           />
           <Route
             path="/signin"
             element={
-              <Login onLogin={onLogin} loginError={loginError}/>
+              <Login onLogin={onLogin} loginError={loginError} />
             }
           />
-          <Route
+
+          {afterLoginCheck && <Route
             path="/profile"
-            element={
+            element={loggedIn ?
               <Profile
                 loggedIn={loggedIn}
                 email={email}
                 onUpdateUser={handleUpdateUser}
-                handleSignOut={handleSignOut} />
+                handleSignOut={handleSignOut} /> : <Navigate to="/signin" />
             }
           />
+          }
+
           <Route
             path="/not-found"
             element={

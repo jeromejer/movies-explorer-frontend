@@ -22,14 +22,20 @@ function Movies({ loggedIn }) {
 
   const location = useLocation();
 
-  console.log('render list')
-
   const [movies, setMovies] = useState(initialMovies);
   const [userMoviesList, setUserMoviesList] = React.useState([]);
 
   const [inputValue, setInputValue] = useState(initialSearch);
   const [isLoader, setIsLoader] = React.useState(false);
+  const [isShortFilms, setIsShortFilms] = React.useState(false);
 
+
+  //перевод длительности фильма в нужный формат
+  function movieDuration(time) {
+    const hours = Math.floor(time / 60);
+    const minute = time % 60;
+    return `${hours}ч ${minute}м`;
+  }
 
   //получение сохраненных фильмов
   const getSavedUserMovies = () => {
@@ -55,7 +61,7 @@ function Movies({ loggedIn }) {
     } else {
       setInputValue(initialSearch)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   React.useEffect(() => {
@@ -87,6 +93,26 @@ function Movies({ loggedIn }) {
       })
   }
 
+  //получение фильма из поиска по сохраненным фильмам
+  const getSavedMovies = (search = '') => {
+    setIsLoader(true);
+
+    api
+      .getSaveMovies()
+      .then((movies) => {
+        const regular = new RegExp(search, 'i');
+        const filtered = movies.filter(movie => {
+          const { nameRU, nameEN } = movie;
+          return regular.test(nameRU) || regular.test(nameEN);
+        });
+
+
+        setUserMoviesList(filtered);
+        setIsLoader(false);
+      })
+  }
+
+
   const setActiveState = movieFromList => {
     const findedMovie = userMoviesList.find(movie => movie.movieId === movieFromList.id);
     movieFromList.isActive = findedMovie && true;
@@ -113,7 +139,6 @@ function Movies({ loggedIn }) {
 
   // удаление фильма
   function removeMovie(movie) {
-    console.log(movie, 'delete')
     api
       .deleteMovie(movie._id)
       .then(() => {
@@ -128,7 +153,11 @@ function Movies({ loggedIn }) {
 
   const formSubmitHandler = (e) => {
     e.preventDefault();
-    getMovies(inputValue);
+    if (location.pathname ==='/movies') {
+      getMovies(inputValue);
+    } else {
+      getSavedMovies(inputValue)
+    }
   }
 
   const searchInputChangeHandler = (e) => {
@@ -143,8 +172,8 @@ function Movies({ loggedIn }) {
       {isLoader && <Preloader />}
 
       {location.pathname === "/movies" ?
-        <Cards movies={movies} clickHandler={addMovie} />
-        : <Cards movies={userMoviesList} clickHandler={removeMovie} />
+        <Cards movies={movies} clickHandler={addMovie} movieDuration={movieDuration}/>
+        : <Cards movies={userMoviesList} clickHandler={removeMovie} movieDuration={movieDuration}/>
       }
 
       <Footer />
@@ -153,4 +182,3 @@ function Movies({ loggedIn }) {
 }
 
 export default Movies;
-

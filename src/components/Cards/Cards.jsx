@@ -4,12 +4,12 @@ import Card from "../Card/Card";
 
 function Cards(props) {
 
-    const { movies, clickHandler } = props;
+    const { movies, clickHandler, movieDuration } = props;
 
     return (
         <section className="cards">
 
-            {movies.map((movie) => <Card movie={{...movie, title: (movie.nameRU || movie.nameEN) }} clickHandler={clickHandler} />)}
+            {movies.map((movie) => <Card movie={{...movie, title: (movie.nameRU || movie.nameEN) }} clickHandler={clickHandler} movieDuration={movieDuration}/>)}
 
             {movies.length ?
                 <div className="cards__btn-block">
