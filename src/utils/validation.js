@@ -16,6 +16,12 @@ function validation(name, value) {
         } 
     }
 
+    if(name === 'search') {
+      if(!value) {
+          errors =({[name]: 'Поле не может быть пустым'})
+      } 
+  }
+
     if(name === 'name') {
         if(!value) {
           errors = ({[name]: 'Введите имя'})
@@ -25,6 +31,7 @@ function validation(name, value) {
           errors = ({[name]: 'Имя должно содержать больше двух символов'});
         }
       }
+      
 
     return errors;
 }

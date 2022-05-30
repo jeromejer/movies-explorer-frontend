@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import Footer from '../Footer/Footer';
 import Header from "../Header/Header";
 import Search from "../Search/Search";
+import Checkbox from "../Checkbox/Checkbox";
 import Cards from "../Cards/Cards";
 import Preloader from "../Preloader/Preloader";
 import moviesApi from "../../utils/MoviesApi";
-import { localStorageConst } from "../../constants/const";
+import { localStorageConst, errorText } from "../../constants/const";
 import api from "../../utils/MainApi";
 import { useLocation } from "react-router-dom";
 
@@ -20,34 +21,29 @@ function Movies({ loggedIn }) {
 
   const initialSearch = localStorage.getItem(localStorageConst.moviesSearch) || '';
 
+  const initialCheckbox = parseInt(localStorage.getItem(localStorageConst.moviesCheckbox));
+
   const location = useLocation();
 
   const [movies, setMovies] = useState(initialMovies);
   const [userMoviesList, setUserMoviesList] = React.useState([]);
 
   const [inputValue, setInputValue] = useState(initialSearch);
+  const [inputError, setInputError] = useState('');
   const [isLoader, setIsLoader] = React.useState(false);
-  const [isShortFilms, setIsShortFilms] = React.useState(false);
-
-
-  //перевод длительности фильма в нужный формат
-  function movieDuration(time) {
-    const hours = Math.floor(time / 60);
-    const minute = time % 60;
-    return `${hours}ч ${minute}м`;
-  }
+  const [isShortFilms, setIsShortFilms] = React.useState(initialCheckbox);
+  const [errText, serErrText] = React.useState('');
 
   //получение сохраненных фильмов
   const getSavedUserMovies = () => {
+
+
     return api
       .getSaveMovies()
       .then((moviesList) => {
         if (moviesList) {
           setUserMoviesList(moviesList);
         }
-      })
-      .catch((err) => {
-        console.log(err);
       })
   };
 
@@ -69,15 +65,24 @@ function Movies({ loggedIn }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userMoviesList]);
 
-  //получение списка фильмов из поиска бестфильм
+  //получение списка фильмов из поиска по апи
   const getMovies = (search = '') => {
+
     setIsLoader(true);
 
     moviesApi
       .getMoviesData()
       .then((movies) => {
+        if (!Array.isArray(movies)) {
+          movies = [];
+        }
+
         const regular = new RegExp(search, 'i');
         const filtered = movies.filter(movie => {
+          console.log(isShortFilms, movie.duration)
+          if (!isShortFilms && movie.duration > 40) {
+            return false;
+          }
           const { nameRU, nameEN } = movie;
           return regular.test(nameRU) || regular.test(nameEN);
         });
@@ -87,14 +92,21 @@ function Movies({ loggedIn }) {
 
         setMovies(filtered.map(setActiveState));
         setIsLoader(false);
+        setInputError('');
 
-        console.log(filtered)
-        console.log(movies)
+      })
+      .catch((err) => {
+        console.log(err);
+        serErrText(errorText);
+      })
+      .finally(() => {
+        setIsLoader(false);
       })
   }
 
   //получение фильма из поиска по сохраненным фильмам
   const getSavedMovies = (search = '') => {
+
     setIsLoader(true);
 
     api
@@ -102,12 +114,21 @@ function Movies({ loggedIn }) {
       .then((movies) => {
         const regular = new RegExp(search, 'i');
         const filtered = movies.filter(movie => {
+          if (!isShortFilms && movie.duration > 40) {
+            return false;
+          }
           const { nameRU, nameEN } = movie;
           return regular.test(nameRU) || regular.test(nameEN);
         });
 
 
         setUserMoviesList(filtered);
+      })
+      .catch((err) => {
+        console.log(err);
+        serErrText(errorText);
+      })
+      .finally(() => {
         setIsLoader(false);
       })
   }
@@ -150,12 +171,26 @@ function Movies({ loggedIn }) {
   }
 
 
+  React.useEffect(() => {
+    if (location.pathname === '/movies') {
+      getMovies(inputValue);
+    } else {
+      getSavedMovies(inputValue);
+      console.log()
+    }
+  }, [isShortFilms])
 
   const formSubmitHandler = (e) => {
     e.preventDefault();
-    if (location.pathname ==='/movies') {
+    if (inputValue === '') {
+      setInputError('Введите ключевое слово');
+      return
+    }
+    if (location.pathname === '/movies') {
+
       getMovies(inputValue);
     } else {
+
       getSavedMovies(inputValue)
     }
   }
@@ -164,16 +199,28 @@ function Movies({ loggedIn }) {
     setInputValue(e.target.value);
   }
 
+  const onCheckboxChange = () => {
+    const checked = !isShortFilms;
+    setIsShortFilms(checked);
+    localStorage.setItem(localStorageConst.moviesCheckbox, checked * 1);
+
+  };
 
   return (
     <>
       <Header loggedIn={loggedIn} />
-      <Search formSubmitHandler={formSubmitHandler} searchInputChangeHandler={searchInputChangeHandler} inputValue={inputValue} />
+      <Search
+        formSubmitHandler={formSubmitHandler}
+        inputError={inputError}
+        searchInputChangeHandler={searchInputChangeHandler}
+        inputValue={inputValue}>
+        <Checkbox checked={isShortFilms} onChange={onCheckboxChange} />
+      </Search>
       {isLoader && <Preloader />}
 
       {location.pathname === "/movies" ?
-        <Cards movies={movies} clickHandler={addMovie} movieDuration={movieDuration}/>
-        : <Cards movies={userMoviesList} clickHandler={removeMovie} movieDuration={movieDuration}/>
+        <Cards movies={movies} clickHandler={addMovie} errText={errText} />
+        : <Cards movies={userMoviesList} clickHandler={removeMovie} errText={errText} />
       }
 
       <Footer />

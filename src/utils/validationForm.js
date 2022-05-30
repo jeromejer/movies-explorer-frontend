@@ -6,6 +6,7 @@ function validationForm () {
     const [values, setValues] = React.useState({});
     const [errors, setErrors] = React.useState({});
     const [isValid, setIsValid] = React.useState(true);
+    const [isValidBtn, setIsValidBtn] = React.useState(false);
     const [isFocused, setIsFocused] = React.useState({})
 
     const onFocus = (e) => {

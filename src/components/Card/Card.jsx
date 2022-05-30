@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 const imagesHost = 'https://api.nomoreparties.co';
 
-function Card({movie, clickHandler, movieDuration}) {
+function Card({movie, clickHandler}) {
 
     const {
         title,
@@ -13,6 +13,13 @@ function Card({movie, clickHandler, movieDuration}) {
         trailerLink,
         isActive,
     } = movie;
+
+    //перевод длительности фильма в нужный формат
+    function movieDuration(time) {
+    const hours = Math.floor(time / 60);
+    const minute = time % 60;
+    return `${hours}ч ${minute}м`;
+  }
 
     const img = typeof image === 'string' ? image : imagesHost + image.url;
 
