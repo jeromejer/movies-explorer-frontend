@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from '../Footer/Footer';
 import Header from "../Header/Header";
 import Search from "../Search/Search";
@@ -13,87 +13,95 @@ import { useLocation } from "react-router-dom";
 
 function Movies({ loggedIn }) {
 
+  // initial data
   let initialMovies = [];
   try {
     initialMovies = JSON.parse(localStorage.getItem(localStorageConst.movies)) || [];
   }
   catch (e) { }
-
   const initialSearch = localStorage.getItem(localStorageConst.moviesSearch) || '';
-
   const initialCheckbox = parseInt(localStorage.getItem(localStorageConst.moviesCheckbox));
+  const initialCheckboxSavedMovies = parseInt(localStorage.getItem(localStorageConst.moviesCheckboxSavedMovies));
 
-  const location = useLocation();
-
-  const [movies, setMovies] = useState(initialMovies);
-  const [userMoviesList, setUserMoviesList] = React.useState([]);
-
+  // movies
   const [inputValue, setInputValue] = useState(initialSearch);
+  const [movies, setMovies] = useState(initialMovies);
+  const [isShortFilms, setIsShortFilms] = useState(initialCheckbox);
+  const [isFirstPageLoad, setIsFirstPageLoad] = useState(false);
   const [inputError, setInputError] = useState('');
-  const [isLoader, setIsLoader] = React.useState(false);
-  const [isShortFilms, setIsShortFilms] = React.useState(initialCheckbox);
-  const [errText, serErrText] = React.useState('');
 
-  //получение сохраненных фильмов
-  const getSavedUserMovies = () => {
+  // saved movies
+  const [userMoviesList, setUserMoviesList] = useState([]);
+  const [userMoviesListForView, setUserMoviesListForView] = useState([]);
+  const [inputValueSavedMovies, setInputValueSavedMovies] = useState('');
+  const [isShortFilmsSavedMovies, setIsShortFilmsSavedMovies] = useState(initialCheckboxSavedMovies);
+  const [inputErrorSavedMovies, setInputErrorSavedMovies] = useState('');
 
+  // state
+  const [errText, serErrText] = useState('');
+  const [isLoader, setIsLoader] = useState(false);
 
-    return api
-      .getSaveMovies()
-      .then((moviesList) => {
-        if (moviesList) {
-          setUserMoviesList(moviesList);
-        }
-      })
-  };
+  // location
+  const location = useLocation();
+  const isMoviesLocation = location.pathname === "/movies";
 
-  React.useEffect(() => {
-    getSavedUserMovies();
+  // effects
+  useEffect(() => {
+    getSavedMovies();
   }, []);
 
-  React.useEffect(() => {
-    if (location.pathname === "/saved-movies") {
-      setInputValue('')
-    } else {
-      setInputValue(initialSearch)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     setMovies(movies.map(setActiveState));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userMoviesList]);
+
+  useEffect(() => {
+    if (!isFirstPageLoad) { return }
+    getMovies(inputValue);
+  }, [isShortFilms]);
+
+  useEffect(() => {
+    getSavedMovies(inputValueSavedMovies);
+  }, [isShortFilmsSavedMovies]);
+
+  // helpers
+  const filterMovieCB = (movies, search) => {
+    const regular = new RegExp(search, 'i');
+    return movies.filter(movie => {
+      const { nameRU, nameEN } = movie;
+      return regular.test(nameRU) || regular.test(nameEN);
+    });
+  };
+
+  const filterMovieByDurationCB = (movies, isShort) => {
+    if (isShort) { return movies }
+    return movies.filter(movie => {
+      return movie.duration <= 40;
+    });
+  };
+
+  const setActiveState = movieFromList => {
+    const findedMovie = userMoviesList.find(movie => movie.movieId === movieFromList.id);
+    movieFromList.isActive = findedMovie && true;
+    movieFromList._id = findedMovie?._id;
+    return movieFromList;
+  };
+
+  // API
 
   //получение списка фильмов из поиска по апи
   const getMovies = (search = '') => {
-
     setIsLoader(true);
+    setIsFirstPageLoad(true);
 
     moviesApi
       .getMoviesData()
-      .then((movies) => {
-        if (!Array.isArray(movies)) {
-          movies = [];
-        }
-
-        const regular = new RegExp(search, 'i');
-        const filtered = movies.filter(movie => {
-          console.log(isShortFilms, movie.duration)
-          if (!isShortFilms && movie.duration > 40) {
-            return false;
-          }
-          const { nameRU, nameEN } = movie;
-          return regular.test(nameRU) || regular.test(nameEN);
-        });
-
+      .then((movies) => filterMovieCB(movies, search))
+      .then((movies) => filterMovieByDurationCB(movies, isShortFilms))
+      .then(filtered => {
         localStorage.setItem(localStorageConst.movies, JSON.stringify(filtered));
         localStorage.setItem(localStorageConst.moviesSearch, inputValue);
-
         setMovies(filtered.map(setActiveState));
-        setIsLoader(false);
         setInputError('');
-
       })
       .catch((err) => {
         console.log(err);
@@ -105,24 +113,15 @@ function Movies({ loggedIn }) {
   }
 
   //получение фильма из поиска по сохраненным фильмам
-  const getSavedMovies = (search = '') => {
-
+  const getSavedMovies = () => {
     setIsLoader(true);
 
     api
       .getSaveMovies()
-      .then((movies) => {
-        const regular = new RegExp(search, 'i');
-        const filtered = movies.filter(movie => {
-          if (!isShortFilms && movie.duration > 40) {
-            return false;
-          }
-          const { nameRU, nameEN } = movie;
-          return regular.test(nameRU) || regular.test(nameEN);
-        });
-
-
+      .then(filtered => {
         setUserMoviesList(filtered);
+        setInputErrorSavedMovies('');
+        setUserMoviesListForView(filterSavedMovies(filtered, inputValueSavedMovies, isShortFilmsSavedMovies));
       })
       .catch((err) => {
         console.log(err);
@@ -133,16 +132,13 @@ function Movies({ loggedIn }) {
       })
   }
 
-
-  const setActiveState = movieFromList => {
-    const findedMovie = userMoviesList.find(movie => movie.movieId === movieFromList.id);
-    movieFromList.isActive = findedMovie && true;
-    movieFromList._id = findedMovie?._id;
-    return movieFromList;
-  };
+  const filterSavedMovies = (movies, search, isShort)=>{
+    movies = filterMovieCB(movies, search);
+    return filterMovieByDurationCB(movies, isShort);
+  }
 
   //сохранение фильма
-  function addMovie(movie) {
+  const addMovie = (movie) => {
     if (movie.isActive) {
       movie._id && removeMovie(movie)
     }
@@ -150,7 +146,7 @@ function Movies({ loggedIn }) {
       api
         .addMovie(movie)
         .then(() => {
-          getSavedUserMovies();
+          getSavedMovies();
         })
         .catch((err) => {
           console.log(err);
@@ -159,70 +155,84 @@ function Movies({ loggedIn }) {
   }
 
   // удаление фильма
-  function removeMovie(movie) {
+  const removeMovie = (movie) => {
     api
       .deleteMovie(movie._id)
       .then(() => {
-        getSavedUserMovies();
+        getSavedMovies();
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-
-  React.useEffect(() => {
-    if (location.pathname === '/movies') {
-      getMovies(inputValue);
-    } else {
-      getSavedMovies(inputValue);
-      console.log()
-    }
-  }, [isShortFilms])
-
-  const formSubmitHandler = (e) => {
+  // handlers
+  const formSubmitHandlerMovies = (e) => {
     e.preventDefault();
     if (inputValue === '') {
       setInputError('Введите ключевое слово');
       return
     }
-    if (location.pathname === '/movies') {
+    getMovies(inputValue);
+  }
 
-      getMovies(inputValue);
-    } else {
-
-      getSavedMovies(inputValue)
+  const formSubmitHandlerSavedMovies = (e) => {
+    e.preventDefault();
+    if (inputValueSavedMovies === '') {
+      setInputErrorSavedMovies('Введите ключевое слово');
+      return
     }
+    getSavedMovies(inputValueSavedMovies);
   }
 
   const searchInputChangeHandler = (e) => {
     setInputValue(e.target.value);
   }
 
-  const onCheckboxChange = () => {
+  const searchInputChangeHandlerSavedMovies = (e) => {
+    setInputValueSavedMovies(e.target.value);
+  }
+
+  const onCheckboxChangeMovies = () => {
     const checked = !isShortFilms;
+    if (inputValue) { setIsFirstPageLoad(true) }
     setIsShortFilms(checked);
     localStorage.setItem(localStorageConst.moviesCheckbox, checked * 1);
+  };
 
+  const onCheckboxChangeSavedMovies = () => {
+    const checked = !isShortFilmsSavedMovies;
+    setIsShortFilmsSavedMovies(checked);
+    localStorage.setItem(localStorageConst.moviesCheckboxSavedMovies, checked * 1);
   };
 
   return (
     <>
       <Header loggedIn={loggedIn} />
-      <Search
-        formSubmitHandler={formSubmitHandler}
-        inputError={inputError}
-        searchInputChangeHandler={searchInputChangeHandler}
-        inputValue={inputValue}>
-        <Checkbox checked={isShortFilms} onChange={onCheckboxChange} />
-      </Search>
-      {isLoader && <Preloader />}
+      {isMoviesLocation ?
+        <Search
+          formSubmitHandler={formSubmitHandlerMovies}
+          inputError={inputError}
+          searchInputChangeHandler={searchInputChangeHandler}
+          inputValue={inputValue}>
+          <Checkbox checked={isShortFilms} onChange={onCheckboxChangeMovies} />
+        </Search> :
 
-      {location.pathname === "/movies" ?
-        <Cards movies={movies} clickHandler={addMovie} errText={errText} />
-        : <Cards movies={userMoviesList} clickHandler={removeMovie} errText={errText} />
+        <Search
+          formSubmitHandler={formSubmitHandlerSavedMovies}
+          inputError={inputErrorSavedMovies}
+          searchInputChangeHandler={searchInputChangeHandlerSavedMovies}
+          inputValue={inputValueSavedMovies}>
+          <Checkbox checked={isShortFilmsSavedMovies} onChange={onCheckboxChangeSavedMovies} />
+        </Search>
       }
 
+      {isLoader && <Preloader />}
+
+      { !isLoader && (isMoviesLocation ?
+        <Cards movies={movies} clickHandler={addMovie} errText={errText} render={isFirstPageLoad} />
+        : <Cards movies={userMoviesListForView} clickHandler={removeMovie} errText={errText} render={isFirstPageLoad} />)
+      }
       <Footer />
     </>
   );

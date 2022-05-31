@@ -7,7 +7,7 @@ import { useWindowWidthResize } from "../../utils/hooks";
 
 function Cards(props) {
 
-    const { movies, clickHandler, errText } = props;
+    const { movies, clickHandler, errText, render } = props;
 
     const getCountItemsByWidth = () => {
         return (document.body.clientWidth > 480) * 2 + 5;
@@ -45,8 +45,8 @@ function Cards(props) {
                 .map((movie) => <Card movie={{ ...movie, title: (movie.nameRU || movie.nameEN) }} clickHandler={clickHandler} />)
             }
 
-            {!movies.length &&
-                <div className="cards__notfound">{notfoundText}</div>}
+            {!movies.length && render ?
+                <div className="cards__notfound">{notfoundText}</div> : ''}
 
             <div className="cards__err">{errText}</div>
 

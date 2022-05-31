@@ -3,7 +3,8 @@ export const localStorageConst = {
     email: 'email',
     movies: 'movies',
     moviesSearch: 'moviesSearch',
-    moviesCheckbox: 'moviesCheckbox'
+    moviesCheckbox: 'moviesCheckbox',
+    moviesCheckboxSavedMovies: 'moviesCheckboxSavedMovies',
 };
 
 export const errorText = 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
