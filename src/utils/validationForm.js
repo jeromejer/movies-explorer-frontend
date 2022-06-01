@@ -6,7 +6,6 @@ function validationForm () {
     const [values, setValues] = React.useState({});
     const [errors, setErrors] = React.useState({});
     const [isValid, setIsValid] = React.useState(true);
-    const [isValidBtn, setIsValidBtn] = React.useState(false);
     const [isFocused, setIsFocused] = React.useState({})
 
     const onFocus = (e) => {
@@ -18,14 +17,24 @@ function validationForm () {
     const handleChange = (e) => {
         const target = e.target;
         const name = target.name;
+        // values
         const value = target.value;
-        const error = validation(name, value);
-
         setValues({ ...values, [name]: value});
 
-        setErrors(validation(name, value));
+        // errors
+        const error = validation(name, value);
 
-        if(Object.keys(error).length === 0){
+        const actualErrors = {...errors, ...error};
+        if (!error[name]) {
+            delete actualErrors[name];
+        }
+
+        console.log(actualErrors)
+
+        setErrors(actualErrors);
+
+
+        if(Object.keys(actualErrors).length === 0){
             setIsValid(target.closest('form').checkValidity())
         }
     }
@@ -39,7 +48,7 @@ function validationForm () {
         [setValues, setErrors, setIsValid]
       );
 
-    return {values, handleChange, setValues, errors, isValid, onFocus, isFocused, resetForm};
+    return {values, handleChange, setValues, errors, isValid, onFocus, isFocused, resetForm, setIsValid};
 }
 
 export default validationForm;

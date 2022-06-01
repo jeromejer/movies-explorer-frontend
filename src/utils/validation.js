@@ -5,7 +5,7 @@ function validation(name, value) {
     if(name === 'email') {
         if(!value) {
             errors = ({[name]: 'Поле не может быть пустым'})
-        } else if(!/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/.test(value)) {
+        } else if(!/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[/.+@.+\..+/iA-z]{2,4}$/.test(value)) {
             errors = {[name]: 'Неверный фомат e-mail'}
         }
     }

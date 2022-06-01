@@ -7,22 +7,26 @@ import ValidationForm from '../../utils/validationForm'
 
 function Register({onRegister, registerError}) {
   const validation = ValidationForm();
-  const { values, handleChange, errors, isValid, onFocus, isFocused } = validation;
+  const { values, handleChange, errors, isValid, onFocus } = validation;
   const { name, email, password } = values;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onRegister({name, email, password});
-    validation.resetForm();
+    console.log(errors)
+    validation.resetForm({name, email, password});
+     
   };
 
-  const inputClassName = (error)=>{
-    return `form__input ${error ? 'form__input_active' : ''}`;
+  const inputClassName = (errors)=>{
+    return `form__input ${errors ? 'form__input_active' : ''}`;
   }
 
-  const errorClassName = (error)=>{
-    return `form__error ${error ? 'form__error_active' : ''}`;
+  const errorClassName = (errors)=>{
+    return `form__error ${errors ? 'form__error_active' : ''}`;
   }
+
+
 
   return (
     <Auth>
@@ -30,7 +34,7 @@ function Register({onRegister, registerError}) {
             <p className="form__input-title">Имя</p>
             <input 
               type="text" 
-              className={inputClassName(errors.name && !isFocused.name)} 
+              className={inputClassName(errors.name)} 
               name="name" 
               value={values.name} 
               onChange={handleChange}
@@ -38,7 +42,7 @@ function Register({onRegister, registerError}) {
               required/>
 
             <span 
-              className={errorClassName(errors.name && !isFocused.name)} 
+              className={errorClassName(errors.name)} 
               id="name">
               {errors.name}
             </span>
@@ -46,7 +50,7 @@ function Register({onRegister, registerError}) {
             <p className="form__input-title">E-mail</p>
             <input  
               type="email" 
-              className={inputClassName(errors.email && !isFocused.email)}  
+              className={inputClassName(errors.email)}  
               name="email" 
               value={values.email} 
               onChange={handleChange} 
@@ -54,7 +58,7 @@ function Register({onRegister, registerError}) {
               required/>
 
             <span 
-              className={errorClassName(errors.email && !isFocused.email)}
+              className={errorClassName(errors.email)}
               id="email">
               {errors.email}
             </span>
@@ -62,7 +66,7 @@ function Register({onRegister, registerError}) {
             <p className="form__input-title">Пароль</p>
             <input 
               type="password" 
-              className={inputClassName(errors.password && !isFocused.password)}
+              className={inputClassName(errors.password)}
               name="password" 
               minLength="8" 
               value={values.password} 
@@ -70,7 +74,7 @@ function Register({onRegister, registerError}) {
               onFocus={onFocus}
               required/>
             <span 
-              className={errorClassName(errors.password && !isFocused.password)}
+              className={errorClassName(errors.password)}
               id="password">
               {errors.password}
             </span>
