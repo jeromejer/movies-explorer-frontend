@@ -29,8 +29,6 @@ function validationForm () {
             delete actualErrors[name];
         }
 
-        console.log(actualErrors)
-
         setErrors(actualErrors);
 
 

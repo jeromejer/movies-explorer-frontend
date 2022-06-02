@@ -87,13 +87,12 @@ function Movies({ loggedIn }) {
   };
 
   // API
-
   //получение списка фильмов из поиска по апи
   const getMovies = (search = '') => {
-    setIsLoader(true);
+
     setIsFirstPageLoad(true);
 
-    moviesApi
+    return moviesApi
       .getMoviesData()
       .then((movies) => filterMovieCB(movies, search))
       .then((movies) => filterMovieByDurationCB(movies, isShortFilms))
@@ -107,16 +106,13 @@ function Movies({ loggedIn }) {
         console.log(err);
         serErrText(errorText);
       })
-      .finally(() => {
-        setIsLoader(false);
-      })
+
   }
 
   //получение фильма из поиска по сохраненным фильмам
   const getSavedMovies = () => {
-    setIsLoader(true);
 
-    api
+    return api
       .getSaveMovies()
       .then(filtered => {
         setUserMoviesList(filtered);
@@ -127,9 +123,7 @@ function Movies({ loggedIn }) {
         console.log(err);
         serErrText(errorText);
       })
-      .finally(() => {
-        setIsLoader(false);
-      })
+
   }
 
   const filterSavedMovies = (movies, search, isShort)=>{
@@ -173,7 +167,10 @@ function Movies({ loggedIn }) {
       setInputError('Введите ключевое слово');
       return
     }
-    getMovies(inputValue);
+
+    setIsLoader(true);
+    getMovies(inputValue)
+    .finally(() => setIsLoader(false));
   }
 
   const formSubmitHandlerSavedMovies = (e) => {
@@ -182,7 +179,10 @@ function Movies({ loggedIn }) {
       setInputErrorSavedMovies('Введите ключевое слово');
       return
     }
-    getSavedMovies(inputValueSavedMovies);
+
+    setIsLoader(true);
+    getSavedMovies(inputValueSavedMovies)
+    .finally(() => setIsLoader(false));
   }
 
   const searchInputChangeHandler = (e) => {

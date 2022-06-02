@@ -19,6 +19,7 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [loginError, setLoginError] = React.useState(false);
   const [registerError, setRegisterError] = React.useState(false);
+  const [succesUpdate, setSuccesUpdate] = React.useState(false);
 
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [email, setEmail] = React.useState("");
@@ -52,7 +53,7 @@ function App() {
       .signup({ name, password, email })
       .then((data) => {
         if (data.data.email) {
-          nav("/signin");
+          nav("/movies");
         }
       })
       .catch((err) => {
@@ -98,14 +99,16 @@ function App() {
 
   //изменение данных профиля
   function handleUpdateUser({ name, email }) {
+
     api
       .updateUserData({ name, email })
       .then((data) => {
-        setCurrentUser(data);
+          setCurrentUser(data);
+          setSuccesUpdate(true);
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
   }
 
   //выход
@@ -169,7 +172,9 @@ function App() {
                 loggedIn={loggedIn}
                 email={email}
                 onUpdateUser={handleUpdateUser}
-                handleSignOut={handleSignOut} /> : <Navigate to="/signin" />
+                handleSignOut={handleSignOut} 
+                succesUpdate={succesUpdate}
+                setSuccesUpdate={setSuccesUpdate}/> : <Navigate to="/signin" />
             }
           />
           }

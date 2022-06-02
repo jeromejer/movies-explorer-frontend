@@ -17,7 +17,7 @@ function Login({onLogin, loginError}) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onLogin({email, password});
-    validation.resetForm();
+    validation.resetForm({email, password});
   };
 
   const inputClassName = (error)=>{

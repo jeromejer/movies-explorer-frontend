@@ -3,6 +3,7 @@ import './Cards.css';
 import Card from "../Card/Card";
 import { notfoundText } from "../../constants/const";
 import { useWindowWidthResize } from "../../utils/hooks";
+import { useLocation } from "react-router-dom";
 
 
 function Cards(props) {
@@ -22,8 +23,14 @@ function Cards(props) {
 
     useEffect(() => {
         setDefaultViewState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [movies, windowWidth]);
+    }, [windowWidth]);
+
+
+    const {  pathname } = useLocation();
+
+    useEffect(()=>{
+        setDefaultViewState();
+    }, [pathname]);
 
     const loadMore = () => {
         setPage(page + 1);

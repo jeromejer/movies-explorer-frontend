@@ -13,7 +13,6 @@ function Register({onRegister, registerError}) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onRegister({name, email, password});
-    console.log(errors)
     validation.resetForm({name, email, password});
      
   };
