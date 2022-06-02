@@ -140,14 +140,14 @@ function App() {
           {afterLoginCheck && <Route
             path="/movies"
             element={loggedIn ?
-              <Movies loggedIn={loggedIn} /> : <Navigate to="/signin" />
+              <Movies loggedIn={loggedIn} /> : <Navigate to="/" />
             }
           />}
 
           {afterLoginCheck && <Route
             path="/saved-movies"
             element={loggedIn ?
-              <Movies loggedIn={loggedIn} /> : <Navigate to="/signin" />
+              <Movies loggedIn={loggedIn} /> : <Navigate to="/" />
             }
           />
           }
@@ -174,7 +174,7 @@ function App() {
                 onUpdateUser={handleUpdateUser}
                 handleSignOut={handleSignOut} 
                 succesUpdate={succesUpdate}
-                setSuccesUpdate={setSuccesUpdate}/> : <Navigate to="/signin" />
+                setSuccesUpdate={setSuccesUpdate}/> : <Navigate to="/" />
             }
           />
           }
