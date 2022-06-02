@@ -37,6 +37,7 @@ function Profile({loggedIn, handleSignOut, onUpdateUser, succesUpdate, setSucces
       name: name,
       email: email,
     });
+    setNotSuccesUpdate(true);
   }
   
     React.useEffect(() => {

@@ -37,6 +37,7 @@ function App() {
           setLoggedIn(true);
           localStorage.setItem(localStorageConst.jwt, data.token);
           localStorage.setItem(localStorageConst.email, email);
+          setAfterLoginCheck(true);
           nav("/movies");
         }
       })
@@ -53,7 +54,7 @@ function App() {
       .signup({ name, password, email })
       .then((data) => {
         if (data.data.email) {
-          nav("/movies");
+          onLogin({ email, password })
         }
       })
       .catch((err) => {
@@ -161,7 +162,7 @@ function App() {
 
           {<Route
             path="/signin"
-            element={ !loggedIn ?
+            element={ !afterLoginCheck || !loggedIn ?
               <Login onLogin={onLogin} loginError={loginError} /> : <Navigate to="/" />
             }
           />}
