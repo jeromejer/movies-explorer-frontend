@@ -103,8 +103,8 @@ function App() {
     api
       .updateUserData({ name, email })
       .then((data) => {
-          setCurrentUser(data);
-          setSuccesUpdate(true);
+        setCurrentUser(data);
+        setSuccesUpdate(true);
       })
       .catch((err) => {
         console.log(err);
@@ -152,18 +152,19 @@ function App() {
           />
           }
 
-          <Route
-            path="/signup"
-            element={
-              <Register onRegister={onRegister} registerError={registerError} />
-            }
-          />
-          <Route
+          {<Route
+              path="/signup"
+              element={ !loggedIn ?
+                <Register onRegister={onRegister} registerError={registerError} /> : <Navigate to="/" />
+            
+              }/> }
+
+          {<Route
             path="/signin"
-            element={
-              <Login onLogin={onLogin} loginError={loginError} />
+            element={ !loggedIn ?
+              <Login onLogin={onLogin} loginError={loginError} /> : <Navigate to="/" />
             }
-          />
+          />}
 
           {afterLoginCheck && <Route
             path="/profile"
@@ -172,15 +173,15 @@ function App() {
                 loggedIn={loggedIn}
                 email={email}
                 onUpdateUser={handleUpdateUser}
-                handleSignOut={handleSignOut} 
+                handleSignOut={handleSignOut}
                 succesUpdate={succesUpdate}
-                setSuccesUpdate={setSuccesUpdate}/> : <Navigate to="/" />
+                setSuccesUpdate={setSuccesUpdate} /> : <Navigate to="/" />
             }
           />
           }
 
           <Route
-            path="/not-found"
+          path="*"
             element={
               <NotFound />
             }
