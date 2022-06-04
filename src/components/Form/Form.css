@@ -1,0 +1,155 @@
+.form {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding-top: 70px;
+    padding-bottom: 70px;
+    justify-content: space-between;
+}
+
+.form__title {
+    margin: 40px 0;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+}
+
+.form__input-title {
+    margin: 24px 0 5px;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    color: #A0A0A0;
+
+}
+
+.form__input-title:first-of-type{
+    margin: 0;
+}
+
+
+.form__inputs {
+    width: 100%;
+}
+
+.form__input {
+    padding: 0 0 10px 0;
+    width: 100%;
+    border: none;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+    border-bottom: 1px solid #E8E8E8;
+    outline: none;
+}
+
+.form__input:focus {
+    border-bottom: 1px solid #000000;
+}
+
+.form__btn {
+    border: none;
+    width: 100%;
+    padding: 13px 0 15px;
+    background: #000000;
+    border-radius: 3px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #FFFFFF;
+    box-sizing: border-box;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.form__btn_disabled {
+    opacity: 0.5;
+}
+
+.form__btn:hover {
+    opacity: 0.8;
+}
+
+.form__subtitle {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #A0A0A0;
+    margin: 0 6px 0 0;
+}
+
+.form__link {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #000000;
+    text-decoration: none;
+}
+
+.form__link:hover {
+    opacity: 0.8;
+}
+
+.form__text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.form__error {
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    color: #FF4062;
+    display: none;
+  }
+
+  .form__error_active {
+    display: inline;
+  }
+
+  .form__input_active {
+    color: #FF4062;
+  }
+
+  @media screen and (max-width: 768px) {
+    .form {
+        padding: 232px 0;
+    }
+
+}
+
+
+  @media screen and (max-width: 320px) {
+    .form {
+        padding-top: 56px;
+        padding-bottom: 30px;
+        max-width: 260px;
+    }
+
+    .form__title {
+        text-align: center;
+    }
+
+    .form__subtitle {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .form__link {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .form__logo {
+        display: flex;
+        justify-content: center;
+    }
+
+}

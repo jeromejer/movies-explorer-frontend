@@ -1,0 +1,19 @@
+@import url("./vendor/normalize.css");
+@import url("./vendor/fonts/fonts.css");
+
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+    padding-bottom: 172px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+@media screen and (max-width: 409px) {
+    body {
+        padding-bottom: 270px;
+    }
+}

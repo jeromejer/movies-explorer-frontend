@@ -1,0 +1,158 @@
+.about {
+    width: 100%;
+    background-color: #FFFFFF;
+    padding: 110px 0;
+}
+
+.about__content {
+    max-width: 1140px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+
+.about__title {
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 27px;
+    letter-spacing: -0.04em;
+    color: #000000;
+    padding-bottom: 23px;
+    border-bottom:  1px solid black;
+    width: 100%;
+}
+
+.about__column {
+    margin-top: 70px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.about__text {
+    display: flex;
+    flex-direction: column;
+    max-width: 550px;
+}
+
+.about__info {
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.04em;
+    color: #000000;
+}
+
+.about__subtitle {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000000;
+}
+
+.about__backend {
+    max-width: 228px;
+    width: 100%;
+}
+
+.about__backend-title {
+    padding: 9px 0;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #FFFFFF;
+    background-color: #000000;
+}
+
+.about__backend-subtitle, .about__frontend-subtitle {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #A0A0A0;
+    margin-top: 14px;
+}
+
+.about__week {
+    display: flex;
+    width: 100%;
+    margin: 110px auto 0;
+}
+
+.about__frontend {
+    max-width: 912px;
+    width: 100%;
+}
+
+.about__frontend-title {
+    padding: 9px 0;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #000000;;
+    background-color: #F2F2F2;
+}
+
+@media screen and (max-width: 820px) {
+    .about__content {
+        max-width: 668px;
+    }
+
+    .about {
+        padding: 90px 0;
+    }
+
+    .about__text {
+        max-width: 319px;
+    }
+    
+    .about__subtitle {
+        font-size: 12px;
+        line-height: 18px;
+        margin: 22px 0 0;
+    }
+
+    .about__info {
+        margin: 0;
+    }
+
+    .about__week {
+        margin: 93px auto 0;
+    }
+}
+
+@media screen and (max-width: 409px) {
+    .about__content {
+        max-width: 284px;
+    }
+
+    .about {
+        padding: 70px 0;
+    }
+
+    .about__column {
+        margin-top: 60px;
+        flex-direction: column;
+        gap: 56px;
+    }
+
+    .about__subtitle {
+        font-size: 11px;
+        line-height: 16px;
+        margin: 16px 0 0;
+    }
+
+    .about__info {
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+    .about__week {
+        margin: 60px auto 0;
+    }
+
+    .about__backend {
+        max-width: 100px;
+    }
+}
